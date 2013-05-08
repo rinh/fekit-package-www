@@ -1,20 +1,24 @@
 extends layout
 
 block content
-	.hero-unit
-		h1 #{title}
-		p 搜索,查看源中的组件
 
-	.navbar
-		.navbar-inner
-			form.navbar-form.pull-right
-				input#search.search-query(type='text',placeholder='组件名称') 
-	#result
-	
-	.footer
-		.well
-			a(href='https://github.com/rinh/fekit') fekit on github 
-
-
-block js
-	script(src='/javascripts/index.js')
+	- if (err) 
+		.alert
+			发生异常错误：#{err}
+	- else
+		- if (list.length)
+			table.table
+				thead
+					th 名称
+					th 最新版本
+					th 描述
+				tbody
+					each item in list
+						td
+							a(href='/view/#{item.name}/#{item.version}') #{item.name}
+						td= item.version
+						td= item.description
+		- else
+			.alert
+				button.close(type='button',data-dismiss='alert') &times;
+				找不到包含 #{keyword} 的组件

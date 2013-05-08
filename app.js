@@ -4,8 +4,8 @@
  */
 
 var express = require('express')
+  , params = require('express-params')
   , routes = require('./routes')
-  , view = require('./routes/view')
   , http = require('http')
   , path = require('path');
 
@@ -28,7 +28,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/view', routes.view);
+app.get('/view/:pkgname/:version', routes.view);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -1,20 +1,14 @@
 extends layout
 
 block content
-	.hero-unit
-		h1 #{title}
-		p 搜索,查看源中的组件
 
-	.navbar
-		.navbar-inner
-			form.navbar-form.pull-right
-				input#search.search-query(type='text',placeholder='组件名称') 
-	#result
-	
-	.footer
-		.well
-			a(href='https://github.com/rinh/fekit') fekit on github 
+    h3 #{info.name} @ #{info.version}
 
+        span.f14.m30 #{info.description}
 
-block js
-	script(src='/javascripts/index.js')
+    pre
+        span tar 包下载: 
+        a(href='#{info.dist.tarball}')  #{info.name}-#{info.version}.tgz
+
+    .announce
+        article.markdown-body !{readme}
