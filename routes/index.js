@@ -53,18 +53,27 @@ exports.view = function(req, res){
 
     var url = '/' + d.pkgname + '/' + d.version + '/'
 
-    GET( url , function( err , body ){
+    GET( '/' + d.pkgname + '/' , function( err , all ){
 
-        body = body || {};
         d.err = err;
-        d.info = body;
-        d.readme = body.config ? markdown.toHTML( body.config.README || "" ) : ""
+        if( err ) { return res.render('view',d); }
 
-        res.render('view', d );
+        GET( url , function( err , body ){
 
-    });
+            body = body || {};
+            d.err = err;
 
-    
+            if( err ) { return res.render('view',d); }
+
+            d.info = body;
+            d.readme = body.config ? markdown.toHTML( body.config.README || "" ) : ""
+            d.all = all;
+
+            res.render('view', d );
+
+        });
+
+    });    
 
 };
 
