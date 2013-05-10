@@ -14,8 +14,8 @@ block content
             span.f14.m30 #{info.description}
 
         pre
-            p 作者: 
-                a(href='mailto:#{info.config.email}') #{info.config.name} 
+            p 作者: #{info.config.name} 
+            p 联系方式: #{info.config.email}
             span tar下载: 
             a(href='#{info.dist.tarball}') #{info.name}-#{info.version}.tgz
 
