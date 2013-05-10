@@ -14,10 +14,11 @@ block content
 					th 描述
 				tbody
 					each item in list
-						td
-							a(href='/view/#{item.name}/#{item.version}') #{item.name}
-						td= item.version
-						td= item.description
+						tr 
+							td
+								a(href='/view/#{item.name}/#{item.version}') #{item.name}
+							td= item.version
+							td= item.description
 		- else
 			.alert
 				button.close(type='button',data-dismiss='alert') &times;
