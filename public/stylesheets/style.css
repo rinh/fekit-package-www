@@ -3,6 +3,7 @@
 
 .f14 { font-size: 14px; font-weight: normal; }
 .m30 { margin:auto 30px; }
+.pad3 { padding:0 3px; }
 
 .announce { background: none repeat scroll 0 0 #eee; border-radius:3px; padding:3px; }
 .announce .markdown-body {

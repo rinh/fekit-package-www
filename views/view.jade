@@ -14,10 +14,14 @@ block content
             span.f14.m30 #{info.description}
 
         pre
-            p 作者: #{info.config.author} 
-            p 联系方式: #{info.config.email}
-            span tar下载: 
-            a(href='#{info.dist.tarball}') #{info.name}-#{info.version}.tgz
+            p #{info.config.author} &lt; #{info.config.email} &gt;
+            p tar下载: 
+                a(href='#{info.dist.tarball}') #{info.name}-#{info.version}.tgz
+            p 依赖:
+                each val , key in info.config.dependencies
+                    em.pad3 #{key}
+            p 文档:
+              a(href='/docs/#{info.name}/#{info.version}/')  查看
 
         .announce
             article.markdown-body !{readme}
