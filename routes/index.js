@@ -1,3 +1,4 @@
+var sysurl = require('url')
 var markdown = require('markdown').markdown;
 var request = require('request');
 
@@ -76,4 +77,16 @@ exports.view = function(req, res){
     });    
 
 };
+
+
+
+exports.update_tags = function(req, res){
+
+    var u = sysurl.parse( req.url )
+
+    request( HTTP_HEAD + u.path ).pipe( res );
+
+}
+
+
 

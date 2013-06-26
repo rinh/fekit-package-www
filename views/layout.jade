@@ -3,6 +3,7 @@ html
 	head
 		title= title
 		link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/jquery-ui.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
 	body
 		.wrap
@@ -14,7 +15,7 @@ html
 				.navbar-inner
 					a.brand(href="/") index
 					form.navbar-form.pull-right
-						input#search.search-query(type='text',placeholder='组件名称或描述',value='#{keyword}') 
+						input#search.search-query(type='text',placeholder='组件名称或描述或tag名',value='#{keyword}') 
 
 			block content
 
@@ -26,5 +27,6 @@ html
 
 			script(src='/javascripts/jquery-1.9.1.min.js')
 			script(src='/bootstrap/js/bootstrap.min.js')
+			script(src='/javascripts/jquery-ui.js')
 			script(src='/javascripts/common.js')
 			block js

@@ -14,14 +14,21 @@ block content
             span.f14.m30 #{info.description}
 
         pre
-            p #{info.config.author} &lt; #{info.config.email} &gt;
-            p tar下载: 
+            p tags: 
+                span#tags #{info.tags.join(' , ')}
+                a#edit_tag(href='#') [修改tag]
+
+            p author: #{info.config.author} &lt; #{info.config.email} &gt;
+        
+            p download: 
                 a(href='#{info.dist.tarball}') #{info.name}-#{info.version}.tgz
-            p 依赖:
+            
+            p docs:
+                a(href='/docs/#{info.name}/#{info.version}/') 查看
+
+            p dependencies:
                 each val , key in info.config.dependencies
                     em.pad3 #{key}
-            p 文档:
-              a(href='/docs/#{info.name}/#{info.version}/')  查看
 
         .announce
             article.markdown-body !{readme}
@@ -33,3 +40,53 @@ block content
                 each val , ver in all.versions
                     li
                         a(href='/view/#{info.name}/#{ver}/') #{ver}
+
+
+    #tageditor(style='display:none;')
+        p 编辑 tags 
+        form
+            input#tags(type='text',name='tags',data-pkgname="#{info.name}",value="#{info.tags.join(',')}")
+
+block js
+    
+    script(type='text/javascript')
+
+        function get_tags(){
+            var s = $("input#tags").val().split(',');
+            var _s = []
+            for( var i = 0; i < s.length; i++ ) {
+                _s.push( $.trim(s[i]) )
+            }
+            return _s;
+        }
+
+        $("#tageditor").dialog({
+            autoOpen: false , 
+            modal: true ,
+            buttons: {
+                '确定' : function(){
+                    var pkgname = $("input#tags").data('pkgname');
+                    var tags = get_tags();
+
+                    $.getJSON('/update_tags/' + pkgname , {
+                        tags : tags.join(',')
+                    }, function( data ){
+                        if( data.ret ) {
+                            $("span#tags").html( tags.join(' , ') )
+                            $("#tageditor").dialog('close')
+                        } else {
+                            alert( data.errmsg )
+                        }
+                    })
+
+                } , 
+                '取消' : function(){
+                    $("#tageditor").dialog('close')
+                }
+            }
+        });
+
+        $("#edit_tag").click(function(evt){
+            $("#tageditor").dialog('open');
+            return false;
+        });
