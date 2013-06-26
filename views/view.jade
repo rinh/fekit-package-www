@@ -27,7 +27,7 @@ block content
                 a(href='/docs/#{info.name}/#{info.version}/') 查看
 
             p dependencies:
-                each val , key in info.config.dependencies
+                each val , key in (info.config.dependencies||{})
                     em.pad3 #{key}
 
         .announce
