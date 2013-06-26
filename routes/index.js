@@ -80,6 +80,58 @@ exports.view = function(req, res){
 
 
 
+exports.tags = function(req,res){
+
+    var d = {
+        title: 'Fekit Registry' ,
+        keyword: '',
+        tagname: req.query.tagname , 
+        list: [] , 
+        tags: []
+    }
+
+    if( d.tagname ) {
+
+        GET( '/search_tag/' + d.tagname , function( err , list ){
+            d.err = err
+            d.list = list;
+
+            res.render('tags', d );
+        })
+
+    } else {
+
+        _tags_key = {}
+
+        GET( '/search/' , function( err , list ){
+            d.err = err
+
+            for( var i = 0; i < list.length; i++ ) {
+                var pkg = list[i];
+                var ts = ( pkg.tags || [] );
+                for( var j = 0; j < ts.length; j++ ) {
+                    var t = ts[j];
+                    if( !_tags_key[t] ) {
+                        _tags_key[t] = {
+                            name : t , 
+                            count : 1
+                        }
+                        d.tags.push( _tags_key[t] );
+                    } else {
+                        _tags_key[t].count++;
+                    }
+                }
+            }
+
+            res.render('tags', d );
+        });
+
+    }
+
+}
+
+
+
 exports.update_tags = function(req, res){
 
     var u = sysurl.parse( req.url )

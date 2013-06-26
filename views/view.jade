@@ -43,8 +43,7 @@ block content
 
 
     #tageditor(style='display:none;')
-        p 编辑 tags 
-        form
+        p 编辑 tags (以逗号分隔)
             input#tags(type='text',name='tags',data-pkgname="#{info.name}",value="#{info.tags.join(',')}")
 
 block js
@@ -60,31 +59,40 @@ block js
             return _s;
         }
 
+        function save_tag(){
+            var pkgname = $("input#tags").data('pkgname');
+            var tags = get_tags();
+
+            $.getJSON('/update_tags/' + pkgname , {
+                tags : tags.join(',')
+            }, function( data ){
+                if( data.ret ) {
+                    $("span#tags").html( tags.join(' , ') )
+                    $("#tageditor").dialog('close')
+                } else {
+                    alert( data.errmsg )
+                }
+            })
+        }
+
         $("#tageditor").dialog({
             autoOpen: false , 
             modal: true ,
             buttons: {
                 '确定' : function(){
-                    var pkgname = $("input#tags").data('pkgname');
-                    var tags = get_tags();
-
-                    $.getJSON('/update_tags/' + pkgname , {
-                        tags : tags.join(',')
-                    }, function( data ){
-                        if( data.ret ) {
-                            $("span#tags").html( tags.join(' , ') )
-                            $("#tageditor").dialog('close')
-                        } else {
-                            alert( data.errmsg )
-                        }
-                    })
-
+                    save_tag()
                 } , 
                 '取消' : function(){
                     $("#tageditor").dialog('close')
                 }
             }
         });
+
+        $("input#tags").keypress(function(evt){
+            if( evt.keyCode == 13 ) {
+                save_tag();
+            }
+        })
 
         $("#edit_tag").click(function(evt){
             $("#tageditor").dialog('open');

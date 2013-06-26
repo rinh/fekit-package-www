@@ -1,0 +1,45 @@
+extends layout
+
+block content
+
+    - if (err) 
+        .alert
+            发生异常错误：#{err}
+    - else
+        - if (tagname && list.length)
+            h4 属于 #{tagname} 标签的组件有:
+
+            table.table
+                thead
+                    th 名称
+                    th 最新版本
+                    th 描述
+                tbody
+                    each item in list
+                        tr 
+                            td
+                                a(href='/view/#{item.name}/#{item.version}') #{item.name}
+                            td= item.version
+                            td= item.description
+        - else
+
+            h3 标签云
+
+            #tagcloud
+                each item in tags 
+                    a(href="/tags/?tagname=#{item.name}",rel="#{item.count}",style='margin:auto 3px;') #{item.name}
+
+
+
+block js
+
+    script(src='/javascripts/jquery.tagcloud.js')
+
+    script(type='text/javascript')
+
+        $.fn.tagcloud.defaults = {
+            size: {start: 14, end: 24, unit: 'pt'},
+            color: {start: '#cde', end: '#f52'}
+        };
+
+        $("#tagcloud a").tagcloud();
