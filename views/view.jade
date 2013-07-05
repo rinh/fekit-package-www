@@ -24,9 +24,10 @@ block content
                 a(href='#{info.dist.tarball}') #{info.name}-#{info.version}.tgz
             
             p docs:
-                a.btn(href='/docs/#{info.name}/#{info.version}/') 查看
-                a#create_doc.btn(href='#',target='_blank') 生成
-                span#create_doc_state
+                a.btn(href='/docs/#{info.name}/#{info.version}/',target='_blank') 查看
+                a.create_doc.btn(href='#',doc-type='groc') 生成 groc doc 风格
+                a.create_doc.btn(href='#',doc-type='yui') 生成 yui doc 风格
+                strong.text-error#create_doc_state
 
             p dependencies:
                 each val , key in (info.config.dependencies||{})
@@ -55,9 +56,11 @@ block js
         var pkgname = '#{info.name}';
         var version = '#{info.version}'
 
-        $("#create_doc").click(function(evt){
+        $(".create_doc").click(function(evt){
             $("#create_doc_state").html("创建中...");
-            $.getJSON( '/' + [ 'createdoc' , pkgname , version ].join('/'), function( data ){
+            $.getJSON( '/' + [ 'createdoc' , pkgname , version ].join('/'),{
+                doctype : $(this).data('doc-type') 
+            }, function( data ){
                 if( data.ret ) {
                     $("#create_doc_state").html("创建完成");
                 } else {
