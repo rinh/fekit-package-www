@@ -140,5 +140,13 @@ exports.update_tags = function(req, res){
 
 }
 
+exports.createdoc = function(req, res){
+
+    var u = sysurl.parse( req.url )
+
+    request( HTTP_HEAD + u.path ).pipe( res );
+
+}
+
 
 

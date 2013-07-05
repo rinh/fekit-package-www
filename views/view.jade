@@ -16,7 +16,7 @@ block content
         pre
             p tags: 
                 span#tags #{info.tags.join(' , ')}
-                a#edit_tag(href='#') [修改tag]
+                a#edit_tag.btn(href='#') 修改tag
 
             p author: #{info.config.author} &lt; #{info.config.email} &gt;
         
@@ -24,7 +24,9 @@ block content
                 a(href='#{info.dist.tarball}') #{info.name}-#{info.version}.tgz
             
             p docs:
-                a(href='/docs/#{info.name}/#{info.version}/') 查看
+                a.btn(href='/docs/#{info.name}/#{info.version}/') 查看
+                a#create_doc.btn(href='#',target='_blank') 生成
+                span#create_doc_state
 
             p dependencies:
                 each val , key in (info.config.dependencies||{})
@@ -50,6 +52,21 @@ block js
     
     script(type='text/javascript')
 
+        var pkgname = '#{info.name}';
+        var version = '#{info.version}'
+
+        $("#create_doc").click(function(evt){
+            $("#create_doc_state").html("创建中...");
+            $.getJSON( '/' + [ 'createdoc' , pkgname , version ].join('/'), function( data ){
+                if( data.ret ) {
+                    $("#create_doc_state").html("创建完成");
+                } else {
+                    alert( data.errmsg )
+                }
+            })
+            return false;
+        })
+
         function get_tags(){
             var s = $("input#tags").val().split(',');
             var _s = []
@@ -60,7 +77,6 @@ block js
         }
 
         function save_tag(){
-            var pkgname = $("input#tags").data('pkgname');
             var tags = get_tags();
 
             $.getJSON('/update_tags/' + pkgname , {

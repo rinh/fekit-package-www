@@ -31,6 +31,7 @@ app.get('/', routes.index);
 app.get('/view/:pkgname/:version', routes.view);
 app.get('/update_tags/:name', routes.update_tags);
 app.get('/tags', routes.tags);
+app.get('/createdoc/:pkgname/:version', routes.createdoc);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
