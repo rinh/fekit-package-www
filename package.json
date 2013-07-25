@@ -10,6 +10,7 @@
     "express-params": "*",
     "request": "*",
     "markdown": "*",
-    "jade": "*"
+    "jade": "*",
+    "passport": "*"
   }
 }
