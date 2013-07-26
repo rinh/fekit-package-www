@@ -11,6 +11,7 @@ block content
 				thead
 					th 名称
 					th 最新版本
+					th 星级
 					th 描述
 				tbody
 					each item in list
@@ -18,8 +19,14 @@ block content
 							td
 								a(href='/view/#{item.name}/#{item.version}') #{item.name}
 							td= item.version
+							td
+								.rateit(data-rateit-value="#{item.star.star}",data-rateit-readonly="true")
 							td= item.description
 		- else
 			.alert
 				button.close(type='button',data-dismiss='alert') &times;
 				找不到包含 #{keyword} 的组件
+
+block js
+	script
+		var TAB = "index";

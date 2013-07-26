@@ -1,0 +1,58 @@
+extends layout
+
+block content
+    
+    .well.well-large
+        
+        form#frm.form-horizontal(method="post",action="/user/changepwd")
+            .control-group
+                label.control-label(for="oripassword") 原密码
+                .controls
+                    input#oripassword(name="oripassword",type="password",placeholder="原密码",autocomplete="off")
+            .control-group
+                label.control-label(for="password") 密码
+                .controls
+                    input#password(name="password",type="password",placeholder="密码",autocomplete="off")
+            .control-group
+                label.control-label(for="repassword") 重复密码
+                .controls
+                    input#repassword(name="repassword",type="password",placeholder="重复密码",autocomplete="off")
+            .control-group
+                .controls
+                    button.btn(type="submit") 确定
+
+        - if (locals.errmsg) 
+            .alert.alert-error 
+                button.close(data-dismiss='alert',type='button') x
+                strong Error!
+                span  #{errmsg}
+
+        - if (locals.msg) 
+            .alert.alert-success 
+                button.close(data-dismiss='alert',type='button') x
+                strong Success!
+                span  !{msg}
+block js
+    script
+
+        $('#frm').bind('submit',function(e){
+
+            if( $('#oripassword').val() == "" ) {
+                alert('原密码不能为空');
+                return false;
+            }
+
+            if( $('#password').val() == "" ) {
+                alert('密码不能为空');
+                return false;
+            }
+
+            if( $('#repassword').val() != $('#password').val() ) {
+                alert('重复密码必须输入一致');
+                return false;
+            }
+
+            return true;
+        })
+
+

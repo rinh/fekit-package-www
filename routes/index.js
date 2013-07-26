@@ -1,26 +1,8 @@
+var _ = require('underscore')
 var sysurl = require('url')
 var markdown = require('markdown').markdown;
-var request = require('request');
-
-var HTTP_HEAD = "http://l-registry.fe.dev.cn6.qunar.com:3300";
-
-var GET = function( url , cb ) {
-
-    request( HTTP_HEAD + url , function(err, res, body){
-
-        var json = JSON.parse(body);
-
-        if( json.ret ) {
-            cb( null , json.data );
-        } else {
-            cb( json.errmsg , json.data );
-        }
-
-    });
-
-};
-
-
+var http = require('./http');
+var layout = require('./layout');
 
 /*
  * GET home page.
@@ -30,36 +12,33 @@ exports.index = function(req, res){
 
     var keyword = req.query.keyword || "" 
 
-    var renderData = { 
-        title: 'Fekit Registry' ,
-        keyword: keyword
-    };
+    var d = layout.merge( req , res , {
+        keyword : keyword
+    })
 
-    GET( '/search/' + keyword , function( err , list ){
-        renderData.err = err;
-        renderData.list = list;
-        res.render('index', renderData );
+    http.GET( '/search/' + keyword , function( err , list ){
+        d.err = err;
+        d.list = list;
+        res.render('index', d );
     });
     
 };
 
 exports.view = function(req, res){
 
-    var d = { 
-        title: 'Fekit Registry' ,
-        keyword: '' ,
+    var d = layout.merge( req , res , { 
         pkgname: req.params.pkgname , 
         version: req.params.version
-    };
+    });
 
     var url = '/' + d.pkgname + '/' + d.version + '/'
 
-    GET( '/' + d.pkgname + '/' , function( err , all ){
+    http.GET( '/' + d.pkgname + '/' , function( err , all ){
 
         d.err = err;
         if( err ) { return res.render('view',d); }
 
-        GET( url , function( err , body ){
+        http.GET( url , function( err , body ){
 
             body = body || {};
             d.err = err;
@@ -70,7 +49,10 @@ exports.view = function(req, res){
             d.readme = body.config ? markdown.toHTML( body.config.README || "" ) : ""
             d.all = all;
 
-            res.render('view', d );
+            http.GET( '/star/find/' + d.pkgname , function( err , starinfo ) {
+                d.star = starinfo || {};
+                res.render('view', d ); 
+            })
 
         });
 
@@ -82,17 +64,15 @@ exports.view = function(req, res){
 
 exports.tags = function(req,res){
 
-    var d = {
-        title: 'Fekit Registry' ,
-        keyword: '',
+    var d = layout.merge( req, res , {
         tagname: req.query.tagname , 
         list: [] , 
         tags: []
-    }
+    })
 
     if( d.tagname ) {
 
-        GET( '/search_tag/' + d.tagname , function( err , list ){
+        http.GET( '/search_tag/' + d.tagname , function( err , list ){
             d.err = err
             d.list = list;
 
@@ -103,7 +83,7 @@ exports.tags = function(req,res){
 
         _tags_key = {}
 
-        GET( '/search/' , function( err , list ){
+        http.GET( '/search/' , function( err , list ){
             d.err = err
 
             for( var i = 0; i < list.length; i++ ) {
@@ -131,22 +111,25 @@ exports.tags = function(req,res){
 }
 
 
-
-exports.update_tags = function(req, res){
-
+exports.forword = function(req, res){
     var u = sysurl.parse( req.url )
-
-    request( HTTP_HEAD + u.path ).pipe( res );
-
+    http.request( http.HTTP_HEAD + u.path ).pipe( res );
 }
 
-exports.createdoc = function(req, res){
-
+exports.forword_post = function(req, res){
     var u = sysurl.parse( req.url )
-
-    request( HTTP_HEAD + u.path ).pipe( res );
-
+    http.request.put( http.HTTP_HEAD + u.path , {
+        form : req.body
+    }).pipe( res );
 }
 
 
-
+exports.renderView = function( name , checkLogin ) {
+    return function( req , res ) {
+        if( checkLogin && !req.user ) {
+            res.redirect('/signin?ret=' + req.path )
+        } else {
+            res.render( name , layout.merge( req , res ) )
+        }
+    }
+}

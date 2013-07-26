@@ -13,10 +13,17 @@ block content
 
             span.f14.m30 #{info.description}
 
+        p.clearfix
+            #rateit.pull-left.rateit(data-rateit-value="#{star.star||0}",data-rateit-step="1")  
+            .pull-left.badge.badge-inverse #{star.count||0} 人投票
+
+        p.clearfix
+
         pre
             p tags: 
                 span#tags #{info.tags.join(' , ')}
-                a#edit_tag.btn(href='#') 修改tag
+                - if( ~info.config.author.indexOf(user) )
+                    a#edit_tag.btn(href='#') 修改tag
 
             p author: #{info.config.author} &lt; #{info.config.email} &gt;
         
@@ -25,9 +32,10 @@ block content
             
             p docs:
                 a.btn(href='/docs/#{info.name}/#{info.version}/',target='_blank') 查看
-                a.create_doc.btn(href='#',data-doc-type='groc') 生成 groc doc 风格
-                a.create_doc.btn(href='#',data-doc-type='yuidoc') 生成 yui doc 风格
-                strong.text-error#create_doc_state
+                - if( ~info.config.author.indexOf(user) )
+                    a.create_doc.btn(href='#',data-doc-type='groc') 生成 groc doc 风格
+                    a.create_doc.btn(href='#',data-doc-type='yuidoc') 生成 yui doc 风格
+                    strong.text-error#create_doc_state
 
             p dependencies:
                 each val , key in (info.config.dependencies||{})
@@ -50,8 +58,22 @@ block content
             input#tags(type='text',name='tags',data-pkgname="#{info.name}",value="#{info.tags.join(',')}")
 
 block js
-    
     script(type='text/javascript')
+
+        $("#rateit").bind('rated', function (event, value) { 
+            $.post( '/star/add/' , {
+                name : '#{info.name}' ,
+                username : '#{req.user}' , 
+                level : value
+            }, function( data ){
+                data = eval("("+data+")");
+                if( data.ret ) {
+                    
+                } else {
+                    alert( data.errmsg )
+                }
+            })
+        });
 
         var pkgname = '#{info.name}';
         var version = '#{info.version}'

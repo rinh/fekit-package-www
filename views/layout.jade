@@ -1,7 +1,7 @@
 doctype 5
 html
 	head
-		title= title
+		title Fekit Registry
 		link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/jquery-ui.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
@@ -12,16 +12,40 @@ html
 		.wrap
 			div
 				img(src="/images/logo.png",style='float:left')
-				h5(style='float:left;margin-top:83px;margin-left:10px;') #{title} 搜索,查看源中的组件
+				h5(style='float:left;margin-top:83px;margin-left:10px;') Fekit Registry 搜索,查看源中的组件
 				div(style='clear:both;')
 
 			.navbar
 				.navbar-inner
-					a.brand(href="/") index
-					a.brand(href="/tags") tags
-					form.navbar-form.pull-right
-						input#search.search-query(type='text',placeholder='组件名称或描述',value='#{keyword}') 
+					.container
+						#nav.nav-collapse.collapse.navbar-responsive-collapse 
+							ul.nav
+								li.index
+									a(href="/") index
+								li.tags
+									a(href="/tags") tags
+							form.navbar-search.pull-left
+								input#search.search-query(type='text',placeholder='组件名称或描述',value='#{locals.keyword||""}') 
+							
+							- if( locals.user )
 
+								ul.nav.pull-right
+									li.dropdown
+										a.dropdown-toggle(data-toggle="dropdown",href="#")  #{user} 
+											b.caret
+										ul.dropdown-menu
+											li
+												a(href="/changepwd") change password
+											li
+												a(href="/user/signout") sign out
+
+							- else
+
+								ul.nav.pull-right
+									li.signin
+										a(href="/signin?ret=#{req.path}") Sign in
+									li.signup
+										a(href="/signup") Sign up
 			block content
 
 
@@ -29,4 +53,6 @@ html
 			script(src='/bootstrap/js/bootstrap.min.js')
 			script(src='/javascripts/jquery-ui.js')
 			script(src='/javascripts/common.js')
+			link(rel="stylesheet",type="text/css",href='/rateit/rateit.css')
+			script(src='/rateit/jquery.rateit.min.js')
 			block js

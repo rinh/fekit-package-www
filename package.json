@@ -11,6 +11,8 @@
     "request": "*",
     "markdown": "*",
     "jade": "*",
-    "passport": "*"
+    "passport": "*",
+    "passport-local":"*",
+    "underscore":"*"
   }
 }

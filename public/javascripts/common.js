@@ -8,4 +8,8 @@ $("#search").keydown(function(evt){
     }
 });
 
+$(function(){
+    if( window.TAB ) $("#nav li." + TAB ).addClass('active');
+});
+
 })();
