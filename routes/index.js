@@ -113,14 +113,19 @@ exports.tags = function(req,res){
 
 exports.forword = function(req, res){
     var u = sysurl.parse( req.url )
-    http.request( http.HTTP_HEAD + u.path ).pipe( res );
+    console.info('forword. ' + http.HTTP_HEAD + u.path )
+    http.request( http.HTTP_HEAD + u.path , function( err , resp , body ){
+        res.end( body )
+    })
 }
 
 exports.forword_post = function(req, res){
     var u = sysurl.parse( req.url )
     http.request.put( http.HTTP_HEAD + u.path , {
         form : req.body
-    }).pipe( res );
+    }, function( err , resp , body ){
+        res.end( body );
+    })
 }
 
 

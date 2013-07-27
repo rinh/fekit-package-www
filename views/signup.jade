@@ -43,8 +43,8 @@ block js
                 return false;
             }
 
-            if( /^[a-z\.]{5}$/i.test( $('#username').val() ) ) {
-                alert('用户名必须使用英文或点号，且需要大于5位');
+            if( !$('#username').val().length >= 5 || !/^[a-z\.]+$/i.test( $('#username').val() ) ) {
+                alert('用户名必须使用英文或点号，且需要大于等于5位');
                 return false;
             }
 

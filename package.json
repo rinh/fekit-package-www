@@ -8,7 +8,7 @@
   "dependencies": {
     "express": "3.2.3",
     "express-params": "*",
-    "request": "*",
+    "request": "2.25.x",
     "markdown": "*",
     "jade": "*",
     "passport": "*",
