@@ -51,6 +51,7 @@ exports.view = function(req, res){
 
             http.GET( '/star/find/' + d.pkgname , function( err , starinfo ) {
                 d.star = starinfo || {};
+                d.info.dist.tarball = d.info.dist.tarball.replace(/http:\/\/.*?\//,'/')
                 res.render('view', d ); 
             })
 

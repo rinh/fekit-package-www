@@ -39,6 +39,7 @@ app.get('/view/:pkgname/:version', routes.view);
 app.get('/update_tags/:name', routes.forword);
 app.get('/tags', routes.tags);
 app.get('/createdoc/:pkgname/:version', routes.forword);
+app.get('/:pkgname/-/:tarname', routes.forword);
 
 app.post('/star/add',routes.forword_post);
 app.get('/star/find/:name',routes.forword);
