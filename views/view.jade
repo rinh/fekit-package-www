@@ -20,16 +20,18 @@ block content
         p.clearfix
 
         pre
-            p tags: 
-                span#tags #{info.tags.join(' , ')}
-                - if( ~info.config.author.indexOf(user) )
-                    a#edit_tag.btn(href='#') 修改tag
+            - if( info.tags.length )
+                p tags: 
+                    span#tags #{info.tags.join(' , ')}
+                    - if( ~info.config.author.indexOf(user) )
+                        a#edit_tag.btn(href='#') 修改tag
 
             p author: #{info.config.author} &lt; #{info.config.email} &gt;
         
-            p download: 
-                a(href='#{info.dist.tarball}') #{info.name}-#{info.version}.tgz
-            
+            - if( info.config.repository )
+                p repository: 
+                    a(href='#{info.config.repository}',target='_blank') #{info.config.repository}
+
             p docs:
                 a.btn(href='/docs/#{info.name}/#{info.version}/',target='_blank') 查看
                 - if( ~info.config.author.indexOf(user) )
@@ -37,9 +39,10 @@ block content
                     a.create_doc.btn(href='#',data-doc-type='yuidoc') 生成 yui doc 风格
                     strong.text-error#create_doc_state
 
-            p dependencies:
-                each val , key in (info.config.dependencies||{})
-                    em.pad3 #{key}
+            - if( !info.config.dependencies && JSON.stringify(info.config.dependencies) != "{}" )
+                p dependencies:
+                    each val , key in (info.config.dependencies||{})
+                        em.pad3 #{key}
 
         .announce
             article.markdown-body !{readme}
